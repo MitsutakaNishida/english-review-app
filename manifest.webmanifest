@@ -1,0 +1,15 @@
+{
+  "name": "英作文 復習ノート",
+  "short_name": "英作文復習",
+  "description": "自分の英文と模範解答を登録し、間隔反復で復習する英作文ノート",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#2563eb",
+  "lang": "ja",
+  "icons": [
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png"}
+  ]
+}
