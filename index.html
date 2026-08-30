@@ -16,21 +16,32 @@
 .wrap{max-width:980px;margin:auto;padding:18px;padding-bottom:calc(24px + env(safe-area-inset-bottom))}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.title{font-size:26px;font-weight:800}.muted{color:var(--muted);font-size:14px}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid var(--line);background:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700}.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 2px 8px rgba(0,0,0,.03)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:700px){.wrap{padding:12px}.title{font-size:22px}.grid{grid-template-columns:1fr}.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin:10px 0}.tab{flex:1;padding:10px 7px;font-size:13px}.card{padding:15px}.question{font-size:20px}textarea{min-height:105px}.btn{min-height:44px}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:700px){.wrap{padding:12px}.title{font-size:22px}.grid{grid-template-columns:1fr}.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin:10px 0}.tab{flex:1;padding:10px 7px;font-size:13px}.card{padding:15px}.question{font-size:20px}textarea{min-height:105px}.btn{min-height:44px}.tabs .tab{min-width:30%}}
 label{display:block;font-size:13px;font-weight:700;margin-bottom:6px} input,textarea,select{width:100%;padding:11px 12px;border:1px solid #cfd4dc;border-radius:10px;font:inherit;background:#fff} textarea{min-height:90px;resize:vertical}
-.btn{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#eef2ff;color:#1e3a8a}.danger{background:#fee2e2;color:#991b1b}.ok{background:#dcfce7;color:#166534}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.spacer{flex:1}
+.btn{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#eef2ff;color:#1e3a8a}.danger{background:#fee2e2;color:#991b1b}.ok{background:#dcfce7;color:#166534}.mic{background:#ecfeff;color:#155e75}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.spacer{flex:1}
 .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800;background:#eef2ff;color:#3730a3}.badge.due{background:#fef3c7;color:#92400e}.badge.done{background:#dcfce7;color:#166534}
 .question{font-size:22px;font-weight:800;line-height:1.5}.answerbox{background:#f9fafb;border:1px dashed #cbd5e1;padding:14px;border-radius:12px;margin-top:12px;white-space:pre-wrap}.hidden{display:none!important}.item{border-top:1px solid var(--line);padding:14px 0}.item:first-child{border-top:0}.stat{font-size:28px;font-weight:900}.tiny{font-size:12px;color:var(--muted)}
 .notice{padding:10px 12px;border-radius:10px;background:#eff6ff;color:#1d4ed8;font-size:14px}.empty{text-align:center;padding:28px;color:var(--muted)}
+.preview{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;background:#fafafa}.preview b{display:block;margin-bottom:4px}.bulk-area{min-height:260px}.version{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div id="installNote" class="notice hidden" style="margin-bottom:12px">📱 Safariの共有ボタン →「ホーム画面に追加」で、アプリのように使えます。</div>
-  <div class="top"><div><div class="title">英作文 復習ノート</div><div class="muted">自分の英文 → 模範解答 → 翌日・3日後・7日後・14日後に復習</div></div><div class="row"><button class="btn secondary" id="exportBtn">バックアップ</button><label class="btn secondary" style="display:inline-block;margin:0">読み込み<input id="importFile" type="file" accept="application/json" style="display:none"></label></div></div>
-  <div class="tabs"><button class="tab active" data-tab="review">今日の復習 <span id="dueCount"></span></button><button class="tab" data-tab="add">新規登録</button><button class="tab" data-tab="list">一覧</button><button class="tab" data-tab="stats">記録</button></div>
+  <div class="top"><div><div class="title">英作文 復習ノート</div><div class="muted">自分の英文 → 模範解答 → 間隔反復で復習</div><div class="version">v1.1</div></div><div class="row"><button class="btn secondary" id="exportBtn">バックアップ</button><label class="btn secondary" style="display:inline-block;margin:0">読み込み<input id="importFile" type="file" accept="application/json" style="display:none"></label></div></div>
+  <div class="tabs"><button class="tab active" data-tab="review">今日の復習 <span id="dueCount"></span></button><button class="tab" data-tab="bulk">一括登録</button><button class="tab" data-tab="add">1件登録</button><button class="tab" data-tab="list">一覧</button><button class="tab" data-tab="stats">記録</button></div>
 
   <section id="review" class="panel"></section>
+
+  <section id="bulk" class="panel hidden">
+    <div class="card">
+      <label>ChatGPTの「英作文復習アプリ登録用」を、そのまま全部貼り付け</label>
+      <textarea id="bulkText" class="bulk-area" placeholder="日本語：&#10;昨日の最高気温は40.4度でした&#10;&#10;自分の英文：&#10;Most highest temperature...&#10;&#10;模範解答：&#10;The highest temperature...&#10;&#10;間違いポイント：&#10;most highest → highest&#10;&#10;覚えるチャンク：&#10;- the highest temperature&#10;- degrees Celsius&#10;&#10;タグ：&#10;日常会話, 天気&#10;&#10;（複数件そのまま続けて貼ってOK）"></textarea>
+      <div class="row" style="margin-top:12px"><button class="btn secondary" id="parseBtn">内容を確認</button><button class="btn primary hidden" id="bulkSaveBtn">まとめて登録</button><span id="bulkMsg" class="muted"></span></div>
+      <div id="bulkPreview"></div>
+    </div>
+    <div class="notice">一括登録しても、既存データは消えません。新しいカードが追加され、最初の復習日は翌日になります。</div>
+  </section>
 
   <section id="add" class="panel hidden">
     <div class="card">
@@ -44,7 +55,7 @@ label{display:block;font-size:13px;font-weight:700;margin-bottom:6px} input,text
       </div>
       <div class="row" style="margin-top:14px"><button class="btn primary" id="saveBtn">保存する</button><span id="saveMsg" class="muted"></span></div>
     </div>
-    <div class="notice">保存すると、まず翌日に復習対象になります。復習で「できた」を押すたびに 3日後 → 7日後 → 14日後 → 30日後へ進みます。</div>
+    <div class="notice">保存すると、まず翌日に復習対象になります。「できた」で復習間隔が伸び、「まだ無理」で翌日に再出題します。</div>
   </section>
 
   <section id="list" class="panel hidden"><div class="card"><div class="row"><input id="search" placeholder="日本語・英文・タグで検索" style="max-width:420px"><div class="spacer"></div><span class="muted" id="itemCount"></span></div><div id="items"></div></div></section>
@@ -52,31 +63,114 @@ label{display:block;font-size:13px;font-weight:700;margin-bottom:6px} input,text
   <section id="stats" class="panel hidden"><div id="statsBody"></div></section>
 </div>
 <script>
-const KEY='english_review_cards_v1';
+const KEY='english_review_cards_v1'; // 既存データ互換のため絶対に変更しない
 const intervals=[1,3,7,14,30,60];
-let cards=load(); let currentId=null; let revealed=false;
+let cards=load(); let currentId=null; let bulkParsed=[];
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []}}
 function persist(){localStorage.setItem(KEY,JSON.stringify(cards))}
 function todayStart(){const d=new Date();d.setHours(0,0,0,0);return d.getTime()}
+function tomorrowStart(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+1);return d.getTime()}
 function fmt(ts){return new Date(ts).toLocaleDateString('ja-JP')}
-function esc(s=''){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function esc(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function dueCards(){const t=todayStart();return cards.filter(c=>(c.nextReview||0)<=t).sort((a,b)=>(a.nextReview||0)-(b.nextReview||0))}
 function setDueCount(){const n=dueCards().length;document.getElementById('dueCount').textContent=n?`(${n})`:''}
-function renderReview(){setDueCount();const root=document.getElementById('review');const due=dueCards();if(!due.length){root.innerHTML=`<div class="card empty"><div style="font-size:34px">🎉</div><b>今日の復習は終了</b><div class="muted">新しい英文を登録するか、また次の復習日に。</div></div>`;currentId=null;return} if(!currentId||!due.some(c=>c.id===currentId)) currentId=due[0].id; const c=cards.find(x=>x.id===currentId); revealed=false;
-root.innerHTML=`<div class="card"><div class="row"><span class="badge due">復習 ${due.indexOf(c)+1}/${due.length}</span><span class="tiny">登録 ${fmt(c.createdAt)} / 復習回数 ${c.reviewCount||0}</span></div><div class="question" style="margin-top:18px">🇯🇵 ${esc(c.jp)}</div><label style="margin-top:18px">英語で言ってみる</label><textarea id="attempt" placeholder="ここに英作文"></textarea><div class="row" style="margin-top:12px"><button class="btn primary" id="revealBtn">答えを見る</button></div><div id="revealArea" class="hidden"><div class="answerbox"><b>模範解答</b>\n${esc(c.model)}\n\n<b>前回の自分</b>\n${esc(c.mine||'-')}\n\n<b>ポイント</b>\n${esc(c.note||'-')}\n\n<b>チャンク</b>\n${esc(c.chunks||'-')}</div><div class="row" style="margin-top:12px"><button class="btn danger" id="againBtn">まだ無理</button><button class="btn ok" id="goodBtn">できた</button></div></div></div>`;
-document.getElementById('revealBtn').onclick=()=>{document.getElementById('revealArea').classList.remove('hidden');document.getElementById('revealBtn').classList.add('hidden');revealed=true};
-document.getElementById('againBtn').onclick=()=>grade(false,document.getElementById('attempt').value);
-document.getElementById('goodBtn').onclick=()=>grade(true,document.getElementById('attempt').value);
+function newId(){return (crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random())}
+function makeCard(data){return {id:newId(),jp:data.jp||'',mine:data.mine||'',model:data.model||'',note:data.note||'',chunks:data.chunks||'',tags:data.tags||'',createdAt:Date.now(),nextReview:tomorrowStart(),level:0,reviewCount:0,lapses:0,history:[]}}
+
+function renderReview(){
+  setDueCount();
+  const root=document.getElementById('review');
+  const due=dueCards();
+  if(!due.length){root.innerHTML=`<div class="card empty"><div style="font-size:34px">🎉</div><b>今日の復習は終了</b><div class="muted">新しい英文を登録するか、また次の復習日に。</div></div>`;currentId=null;return}
+  if(!currentId||!due.some(c=>c.id===currentId)) currentId=due[0].id;
+  const c=cards.find(x=>x.id===currentId);
+  root.innerHTML=`<div class="card"><div class="row"><span class="badge due">復習 ${due.indexOf(c)+1}/${due.length}</span><span class="tiny">登録 ${fmt(c.createdAt)} / 復習回数 ${c.reviewCount||0}</span></div><div class="question" style="margin-top:18px">🇯🇵 ${esc(c.jp)}</div><label style="margin-top:18px">英語で言ってみる</label><textarea id="attempt" placeholder="ここに英作文。🎤でも回答できます"></textarea><div class="row" style="margin-top:10px"><button class="btn mic" id="micBtn">🎤 音声で回答</button><span id="micStatus" class="tiny"></span></div><div class="row" style="margin-top:12px"><button class="btn primary" id="revealBtn">答えを見る</button></div><div id="revealArea" class="hidden"><div class="answerbox"><b>模範解答</b>\n${esc(c.model)}\n\n<b>前回の自分</b>\n${esc(c.mine||'-')}\n\n<b>ポイント</b>\n${esc(c.note||'-')}\n\n<b>チャンク</b>\n${esc(c.chunks||'-')}</div><div class="row" style="margin-top:12px"><button class="btn danger" id="againBtn">まだ無理</button><button class="btn ok" id="goodBtn">できた</button></div></div></div>`;
+  document.getElementById('revealBtn').onclick=()=>{document.getElementById('revealArea').classList.remove('hidden');document.getElementById('revealBtn').classList.add('hidden')};
+  document.getElementById('againBtn').onclick=()=>grade(false,document.getElementById('attempt').value);
+  document.getElementById('goodBtn').onclick=()=>grade(true,document.getElementById('attempt').value);
+  document.getElementById('micBtn').onclick=startSpeech;
 }
-function grade(ok,attempt){const c=cards.find(x=>x.id===currentId);if(!c)return;c.history=c.history||[];c.history.push({date:Date.now(),ok,attempt});if(ok){c.level=Math.min((c.level||0)+1,intervals.length-1);c.reviewCount=(c.reviewCount||0)+1;const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+intervals[c.level]);c.nextReview=d.getTime();}else{c.level=0;const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+1);c.nextReview=d.getTime();c.lapses=(c.lapses||0)+1;}persist();currentId=null;renderReview();renderList();renderStats()}
-function addCard(){const jp=document.getElementById('jp').value.trim(),model=document.getElementById('model').value.trim();if(!jp||!model){document.getElementById('saveMsg').textContent='日本語と模範解答は必須やで';return}const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+1);cards.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),jp,mine:document.getElementById('mine').value.trim(),model,note:document.getElementById('note').value.trim(),chunks:document.getElementById('chunks').value.trim(),tags:document.getElementById('tags').value.trim(),createdAt:Date.now(),nextReview:d.getTime(),level:0,reviewCount:0,lapses:0,history:[]});persist();['jp','mine','model','note','chunks','tags'].forEach(id=>document.getElementById(id).value='');document.getElementById('saveMsg').textContent='保存したで ✓';setTimeout(()=>document.getElementById('saveMsg').textContent='',1800);renderReview();renderList();renderStats()}
-function renderList(){const q=(document.getElementById('search')?.value||'').toLowerCase();const arr=cards.filter(c=>[c.jp,c.mine,c.model,c.note,c.chunks,c.tags].join(' ').toLowerCase().includes(q));document.getElementById('itemCount').textContent=`${arr.length}件`;document.getElementById('items').innerHTML=arr.length?arr.map(c=>`<div class="item"><div class="row"><b>${esc(c.jp)}</b><span class="badge">次回 ${fmt(c.nextReview)}</span><div class="spacer"></div><button class="btn danger" onclick="delCard('${c.id}')">削除</button></div><div style="margin-top:7px"><b>模範:</b> ${esc(c.model)}</div>${c.mine?`<div class="muted">自分: ${esc(c.mine)}</div>`:''}${c.note?`<div class="tiny">ポイント: ${esc(c.note)}</div>`:''}${c.tags?`<div class="tiny"># ${esc(c.tags)}</div>`:''}</div>`).join(''):`<div class="empty">まだ登録なし</div>`}
+
+function startSpeech(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const status=document.getElementById('micStatus');
+  const btn=document.getElementById('micBtn');
+  if(!SR){status.textContent='この環境ではWeb音声認識が使えません。iPhoneキーボードの🎤音声入力なら使えます。';document.getElementById('attempt').focus();return}
+  try{
+    const rec=new SR(); rec.lang='en-US'; rec.interimResults=true; rec.continuous=false; rec.maxAlternatives=1;
+    let finalText='';
+    rec.onstart=()=>{status.textContent='聞いてます… 英語でどうぞ';btn.textContent='🔴 聞き取り中'};
+    rec.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalText+=t;else interim+=t}document.getElementById('attempt').value=(finalText||interim).trim()};
+    rec.onerror=e=>{status.textContent=e.error==='not-allowed'?'マイクの許可が必要です':'音声認識できませんでした。もう一度どうぞ。'};
+    rec.onend=()=>{btn.textContent='🎤 音声で回答';if(document.getElementById('attempt').value.trim())status.textContent='入力しました ✓';else if(!status.textContent)status.textContent='聞き取れませんでした'};
+    rec.start();
+  }catch{status.textContent='音声認識を開始できませんでした。キーボードの🎤も使えます。'}
+}
+
+function grade(ok,attempt){
+  const c=cards.find(x=>x.id===currentId);if(!c)return;
+  c.history=c.history||[];c.history.push({date:Date.now(),ok,attempt});
+  if(ok){c.level=Math.min((c.level||0)+1,intervals.length-1);c.reviewCount=(c.reviewCount||0)+1;const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+intervals[c.level]);c.nextReview=d.getTime();}
+  else{c.level=0;const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+1);c.nextReview=d.getTime();c.lapses=(c.lapses||0)+1;}
+  persist();currentId=null;renderReview();renderList();renderStats();
+}
+
+function addCard(){
+  const jp=document.getElementById('jp').value.trim(),model=document.getElementById('model').value.trim();
+  if(!jp||!model){document.getElementById('saveMsg').textContent='日本語と模範解答は必須やで';return}
+  cards.unshift(makeCard({jp,mine:document.getElementById('mine').value.trim(),model,note:document.getElementById('note').value.trim(),chunks:document.getElementById('chunks').value.trim(),tags:document.getElementById('tags').value.trim()}));
+  persist();['jp','mine','model','note','chunks','tags'].forEach(id=>document.getElementById(id).value='');document.getElementById('saveMsg').textContent='保存したで ✓';setTimeout(()=>document.getElementById('saveMsg').textContent='',1800);renderReview();renderList();renderStats();
+}
+
+function cleanValue(v=''){
+  return v.trim().replace(/^([「『“\"])([\s\S]*)([」』”\"])$/,'$2').trim();
+}
+function parseBulk(text){
+  const normalized=text.replace(/\r/g,'').replace(/###?\s*英作文復習アプリ登録用/g,'').trim();
+  const starts=[...normalized.matchAll(/(?:^|\n)\s*日本語\s*[：:]/g)].map(m=>m.index+(m[0].startsWith('\n')?1:0));
+  if(!starts.length) return [];
+  const blocks=starts.map((s,i)=>normalized.slice(s,starts[i+1]??normalized.length).trim());
+  const fields={jp:/^日本語\s*[：:]\s*/m,mine:/^自分の英文\s*[：:]\s*/m,model:/^模範解答\s*[：:]\s*/m,note:/^間違いポイント\s*[：:]\s*/m,chunks:/^覚えるチャンク\s*[：:]\s*/m,tags:/^タグ\s*[：:]\s*/m};
+  const order=['jp','mine','model','note','chunks','tags'];
+  return blocks.map(block=>{
+    const positions=order.map(k=>{const m=fields[k].exec(block);return {k,m,pos:m?m.index:-1,start:m?m.index+m[0].length:-1}}).filter(x=>x.pos>=0).sort((a,b)=>a.pos-b.pos);
+    const obj={jp:'',mine:'',model:'',note:'',chunks:'',tags:''};
+    positions.forEach((p,idx)=>{const end=positions[idx+1]?.pos??block.length;let val=block.slice(p.start,end).trim();if(p.k==='chunks')val=val.split('\n').map(x=>x.replace(/^\s*[-・•]\s*/,'')) .filter(Boolean).join(' / ');obj[p.k]=cleanValue(val)});
+    return obj;
+  }).filter(x=>x.jp&&x.model);
+}
+function previewBulk(){
+  bulkParsed=parseBulk(document.getElementById('bulkText').value);
+  const root=document.getElementById('bulkPreview'),msg=document.getElementById('bulkMsg'),save=document.getElementById('bulkSaveBtn');
+  if(!bulkParsed.length){root.innerHTML='';save.classList.add('hidden');msg.textContent='読み取れませんでした。「日本語：」「模範解答：」を含む形式で貼ってください。';return}
+  msg.textContent=`${bulkParsed.length}件読み取ったで`;
+  save.classList.remove('hidden');
+  root.innerHTML=bulkParsed.map((x,i)=>`<div class="preview"><b>${i+1}. ${esc(x.jp)}</b><div><span class="tiny">自分：</span> ${esc(x.mine||'-')}</div><div><span class="tiny">模範：</span> ${esc(x.model)}</div>${x.note?`<div><span class="tiny">ポイント：</span> ${esc(x.note)}</div>`:''}${x.chunks?`<div><span class="tiny">チャンク：</span> ${esc(x.chunks)}</div>`:''}${x.tags?`<div><span class="tiny">タグ：</span> ${esc(x.tags)}</div>`:''}</div>`).join('');
+}
+function saveBulk(){
+  if(!bulkParsed.length)return;
+  const count=bulkParsed.length;
+  const newCards=bulkParsed.map(makeCard);
+  cards=[...newCards,...cards];
+  persist();
+  document.getElementById('bulkText').value='';document.getElementById('bulkPreview').innerHTML='';document.getElementById('bulkSaveBtn').classList.add('hidden');document.getElementById('bulkMsg').textContent=`${count}件まとめて登録したで ✓`;bulkParsed=[];
+  renderReview();renderList();renderStats();
+}
+
+function renderList(){
+  const q=(document.getElementById('search')?.value||'').toLowerCase();
+  const arr=cards.filter(c=>[c.jp,c.mine,c.model,c.note,c.chunks,c.tags].join(' ').toLowerCase().includes(q));
+  document.getElementById('itemCount').textContent=`${arr.length}件`;
+  document.getElementById('items').innerHTML=arr.length?arr.map(c=>`<div class="item"><div class="row"><b>${esc(c.jp)}</b><span class="badge">次回 ${fmt(c.nextReview)}</span><div class="spacer"></div><button class="btn danger" onclick="delCard('${c.id}')">削除</button></div><div style="margin-top:7px"><b>模範:</b> ${esc(c.model)}</div>${c.mine?`<div class="muted">自分: ${esc(c.mine)}</div>`:''}${c.note?`<div class="tiny">ポイント: ${esc(c.note)}</div>`:''}${c.tags?`<div class="tiny"># ${esc(c.tags)}</div>`:''}</div>`).join(''):`<div class="empty">まだ登録なし</div>`;
+}
 window.delCard=id=>{if(confirm('このカードを削除しますか？')){cards=cards.filter(c=>c.id!==id);persist();renderReview();renderList();renderStats()}}
 function renderStats(){const reviews=cards.flatMap(c=>c.history||[]);const ok=reviews.filter(x=>x.ok).length;const rate=reviews.length?Math.round(ok/reviews.length*100):0;const due=dueCards().length;const learned=cards.filter(c=>(c.reviewCount||0)>=3).length;document.getElementById('statsBody').innerHTML=`<div class="grid"><div class="card"><div class="muted">登録英文</div><div class="stat">${cards.length}</div></div><div class="card"><div class="muted">今日の復習</div><div class="stat">${due}</div></div><div class="card"><div class="muted">累計復習</div><div class="stat">${reviews.length}</div></div><div class="card"><div class="muted">「できた」率</div><div class="stat">${rate}%</div></div></div><div class="card"><b>定着中</b><div class="muted">3回以上「できた」になったカード</div><div class="stat">${learned}</div></div>`}
-function exportData(){const blob=new Blob([JSON.stringify(cards,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`english-review-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href)}
+function exportData(){const blob=new Blob([JSON.stringify(cards,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`english-review-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importData(file){const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!Array.isArray(x))throw 0;if(confirm(`${x.length}件を読み込みます。現在のデータは置き換わります。`)){cards=x;persist();renderReview();renderList();renderStats()}}catch{alert('読み込みできないファイルです')}};r.readAsText(file)}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.panel').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.tab).classList.remove('hidden');if(b.dataset.tab==='list')renderList();if(b.dataset.tab==='stats')renderStats()});
-document.getElementById('saveBtn').onclick=addCard;document.getElementById('search').oninput=renderList;document.getElementById('exportBtn').onclick=exportData;document.getElementById('importFile').onchange=e=>e.target.files[0]&&importData(e.target.files[0]);
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.panel').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.tab).classList.remove('hidden');if(b.dataset.tab==='review')renderReview();if(b.dataset.tab==='list')renderList();if(b.dataset.tab==='stats')renderStats()});
+document.getElementById('saveBtn').onclick=addCard;document.getElementById('parseBtn').onclick=previewBulk;document.getElementById('bulkSaveBtn').onclick=saveBulk;document.getElementById('search').oninput=renderList;document.getElementById('exportBtn').onclick=exportData;document.getElementById('importFile').onchange=e=>e.target.files[0]&&importData(e.target.files[0]);
+
 renderReview();renderList();renderStats();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { navigator.serviceWorker.register('./sw.js').catch(()=>{}); }
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent);
