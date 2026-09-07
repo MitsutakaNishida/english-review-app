@@ -1,0 +1,79 @@
+[
+  {
+    "id": "01_self_introduction",
+    "title": "Self Introduction",
+    "category": "interview",
+    "question": "Could you briefly introduce yourself?",
+    "script_en": "I currently work for the Fukuoka Prefectural Government, mainly in the tourism field.\n\nOver the years, I have worked in several areas, including urban development, taxation, international exchange, tourism promotion, and overseas operations.\n\nI also spent three years in Bangkok, where I was responsible for managing our local office and coordinating with Thai government agencies, companies, and other organizations.\n\nThrough these experiences, I have developed strong skills in coordination, communication, and problem solving.\n\nNow, I’m looking for a new opportunity where I can use my experience in a more business-oriented and international environment.",
+    "script_ja": "現在、福岡県庁で主に観光分野の仕事をしています。\n\nこれまで、都市開発、税務、国際交流、観光振興、海外業務など、さまざまな分野を経験してきました。\n\nまた、バンコクに3年間勤務し、現地事務所の運営や、タイ政府機関、企業、その他の関係機関との調整を担当しました。\n\nこうした経験を通じて、調整力、コミュニケーション力、問題解決力を培ってきました。\n\n今後は、これまでの経験を、よりビジネスに近く国際的な環境で活かせる新しい機会を探しています。",
+    "chunks": [
+      "I currently work for …",
+      "Over the years, I have worked in …",
+      "I was responsible for …",
+      "Through these experiences …",
+      "I’m looking for a new opportunity where …"
+    ]
+  },
+  {
+    "id": "02_reason_for_change",
+    "title": "Reason for Career Change",
+    "category": "interview",
+    "question": "Why are you looking for a new opportunity?",
+    "script_en": "I have gained a lot of valuable experience in the public sector, especially in tourism and international projects.\n\nAt the same time, I have become more interested in working in an environment where decisions can be made more quickly and where I can be closer to actual business operations.\n\nI would also like to use my overseas experience more directly.\n\nThat is why I am now looking for a position where I can take more responsibility and contribute to business growth.",
+    "script_ja": "公共部門では、特に観光や国際プロジェクトを中心に多くの貴重な経験を積んできました。\n\n一方で、より迅速に意思決定でき、実際の事業運営により近い環境で働きたいという気持ちが強くなりました。\n\nまた、海外での経験をより直接的に活かしたいと考えています。\n\nそのため、より大きな責任を担い、事業の成長に貢献できるポジションを探しています。",
+    "chunks": [
+      "I have gained a lot of valuable experience in …",
+      "I have become more interested in …",
+      "I would also like to …",
+      "That is why I am now looking for …",
+      "contribute to business growth"
+    ]
+  },
+  {
+    "id": "03_bangkok_experience",
+    "title": "Bangkok Experience",
+    "category": "interview",
+    "question": "Could you tell me about your experience in Thailand?",
+    "script_en": "During my three years in Bangkok, I managed the local office and worked with Thai government agencies, companies, and Japanese organizations.\n\nOne of my main roles was to coordinate projects between Japan and Thailand.\n\nThere were often differences in business culture, communication style, and expectations, so I had to make sure that both sides understood each other clearly.\n\nI learned that good communication is not only about language. It is also about understanding the other side’s priorities and finding a practical solution.\n\nThat experience taught me how to work effectively in an international environment.",
+    "script_ja": "バンコクでの3年間は、現地事務所を運営しながら、タイ政府機関、企業、日本側の関係機関と仕事をしていました。\n\n主な役割の一つは、日本とタイの間のプロジェクトを調整することでした。\n\nビジネス文化、コミュニケーションのスタイル、期待することに違いがある場合が多かったため、双方が互いを正確に理解できるようにする必要がありました。\n\n良いコミュニケーションは語学だけではなく、相手の優先事項を理解し、現実的な解決策を見つけることでもあると学びました。\n\nこの経験から、国際的な環境で効果的に働く方法を身につけました。",
+    "chunks": [
+      "During my three years in Bangkok …",
+      "One of my main roles was to …",
+      "I had to make sure that …",
+      "It is also about understanding …",
+      "That experience taught me how to …"
+    ]
+  },
+  {
+    "id": "04_meeting_facilitation",
+    "title": "Meeting Facilitation",
+    "category": "meeting",
+    "question": "Could you facilitate a short business meeting in English?",
+    "script_en": "Shall we get started?\n\nThank you everyone for joining today.\n\nThe main purpose of today’s meeting is to discuss our current priorities.\n\nLet’s hear from each team first.\n\nDoes anyone have a different view?\n\nCan we come back to the main point?\n\nI think we are discussing two separate issues here. Let’s focus on the first issue for now.\n\nJust to make sure we are on the same page, what we have agreed on is to review the proposal and confirm the schedule by Friday.\n\nWho will take care of this?\n\nIf there are no other comments, let’s wrap up.\n\nThank you everyone. I’ll send a summary after the meeting.",
+    "script_ja": "それでは始めましょうか。\n\n本日はご参加ありがとうございます。\n\n今日の会議の主な目的は、現在の優先事項について話し合うことです。\n\nまず各チームから意見を聞きましょう。\n\n別の意見がある方はいらっしゃいますか。\n\n本題に戻りましょう。\n\n今は二つの別の論点を話していると思います。まず一つ目に集中しましょう。\n\n認識を合わせるために確認すると、合意したのは、提案内容を見直し、金曜日までにスケジュールを確認するということです。\n\nこれは誰が担当しますか。\n\n他にコメントがなければ、そろそろ終わりにしましょう。\n\nありがとうございました。会議後に要点を共有します。",
+    "chunks": [
+      "Shall we get started?",
+      "The main purpose of today’s meeting is …",
+      "Can we come back to the main point?",
+      "Just to make sure we are on the same page …",
+      "Who will take care of this?",
+      "If there are no other comments, let’s wrap up."
+    ]
+  },
+  {
+    "id": "05_problem_solving",
+    "title": "Problem Solving and Coordination",
+    "category": "meeting",
+    "question": "How would you handle a difficult request or disagreement?",
+    "script_en": "I understand your concern, and I see your point.\n\nLet me clarify one thing first.\n\nI think we have two separate issues here, so I would like to deal with them one at a time.\n\nI’m not sure we can meet that deadline with the current resources.\n\nIf this is the top priority, we may need to postpone something else.\n\nBefore we make a decision, I’d like to confirm a few things with the team.\n\nLet me check the details and get back to you.\n\nI think both sides have a valid point, so let’s look for a practical solution that works for everyone.",
+    "script_ja": "ご懸念は理解していますし、おっしゃることも分かります。\n\nまず一点確認させてください。\n\n今は二つの別の問題があると思うので、一つずつ整理したいと思います。\n\n現在の人員や時間では、その期限に間に合わせるのは難しいかもしれません。\n\nこれを最優先にするのであれば、他の何かを後ろ倒しにする必要があります。\n\n決定する前に、チームといくつか確認したいことがあります。\n\n詳細を確認して、改めてご連絡します。\n\n双方の意見に妥当な点があると思うので、全員にとって現実的な解決策を探しましょう。",
+    "chunks": [
+      "I understand your concern.",
+      "Let me clarify one thing.",
+      "I think we have two separate issues here.",
+      "If this is the top priority, we may need to postpone something else.",
+      "Let me check the details and get back to you.",
+      "Let’s look for a practical solution."
+    ]
+  }
+]

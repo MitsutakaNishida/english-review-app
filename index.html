@@ -23,13 +23,14 @@ label{display:block;font-size:13px;font-weight:700;margin-bottom:6px} input,text
 .question{font-size:22px;font-weight:800;line-height:1.5}.answerbox{background:#f9fafb;border:1px dashed #cbd5e1;padding:14px;border-radius:12px;margin-top:12px;white-space:pre-wrap}.hidden{display:none!important}.item{border-top:1px solid var(--line);padding:14px 0}.item:first-child{border-top:0}.stat{font-size:28px;font-weight:900}.tiny{font-size:12px;color:var(--muted)}
 .notice{padding:10px 12px;border-radius:10px;background:#eff6ff;color:#1d4ed8;font-size:14px}.empty{text-align:center;padding:28px;color:var(--muted)}
 .preview{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;background:#fafafa}.preview b{display:block;margin-bottom:4px}.bulk-area{min-height:260px}.version{font-size:11px;color:var(--muted)}
+.interview-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.interview-item{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;cursor:pointer;text-align:left}.interview-item:hover{border-color:#93c5fd}.interview-title{font-weight:900;font-size:16px}.interview-question{line-height:1.55;margin-top:12px}.script{white-space:pre-wrap;line-height:1.65}.chunk-list{margin:8px 0 0;padding-left:20px}.chunk-list li{margin:6px 0}.rating-row .btn{flex:1;min-width:110px}.audio-row .btn{flex:1;min-width:145px}.progress-pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#f3f4f6;font-size:12px;font-weight:800}.interview-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.section-title{font-size:18px;font-weight:900;margin-bottom:8px}.back-btn{margin-bottom:4px}@media(max-width:700px){.interview-list{grid-template-columns:1fr}.audio-row .btn,.rating-row .btn{min-width:0}.top>.row{width:100%}.top>.row .btn,.top>.row label.btn{flex:1;text-align:center}.tabs{max-height:150px;overflow-y:auto}.question,.script,.answerbox,.item{overflow-wrap:anywhere}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div id="installNote" class="notice hidden" style="margin-bottom:12px">📱 Safariの共有ボタン →「ホーム画面に追加」で、アプリのように使えます。</div>
-  <div class="top"><div><div class="title">英作文 復習ノート</div><div class="muted">自分の英文 → 模範解答 → 間隔反復で復習</div><div class="version">v1.1</div></div><div class="row"><button class="btn secondary" id="exportBtn">バックアップ</button><label class="btn secondary" style="display:inline-block;margin:0">読み込み<input id="importFile" type="file" accept="application/json" style="display:none"></label></div></div>
-  <div class="tabs"><button class="tab active" data-tab="review">今日の復習 <span id="dueCount"></span></button><button class="tab" data-tab="bulk">一括登録</button><button class="tab" data-tab="add">1件登録</button><button class="tab" data-tab="list">一覧</button><button class="tab" data-tab="stats">記録</button></div>
+  <div class="top"><div><div class="title">英作文 復習ノート</div><div class="muted">自分の英文 → 模範解答 → 間隔反復で復習</div><div class="version">v1.2</div></div><div class="row"><button class="btn secondary" id="exportBtn">バックアップ</button><label class="btn secondary" style="display:inline-block;margin:0">読み込み<input id="importFile" type="file" accept="application/json" style="display:none"></label></div></div>
+  <div class="tabs"><button class="tab active" data-tab="review">今日の復習 <span id="dueCount"></span></button><button class="tab" data-tab="bulk">一括登録</button><button class="tab" data-tab="add">1件登録</button><button class="tab" data-tab="list">一覧</button><button class="tab" data-tab="stats">記録</button><button class="tab" data-tab="interview">面接・ビジネス</button></div>
 
   <section id="review" class="panel"></section>
 
@@ -61,13 +62,20 @@ label{display:block;font-size:13px;font-weight:700;margin-bottom:6px} input,text
   <section id="list" class="panel hidden"><div class="card"><div class="row"><input id="search" placeholder="日本語・英文・タグで検索" style="max-width:420px"><div class="spacer"></div><span class="muted" id="itemCount"></span></div><div id="items"></div></div></section>
 
   <section id="stats" class="panel hidden"><div id="statsBody"></div></section>
+
+  <section id="interview" class="panel hidden"><div id="interviewBody"><div class="card empty">教材を読み込んでいます…</div></div></section>
 </div>
 <script>
 const KEY='english_review_cards_v1'; // 既存データ互換のため絶対に変更しない
+const INTERVIEW_HISTORY_KEY='english_interview_history_v1';
+const INTERVIEW_DATA_URL='./interview_training_data.json';
 const intervals=[1,3,7,14,30,60];
 let cards=load(); let currentId=null; let bulkParsed=[];
+let interviewItems=[]; let interviewHistory=loadInterviewHistory(); let activeInterviewId=null; let interviewAudio=null;
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []}}
 function persist(){localStorage.setItem(KEY,JSON.stringify(cards))}
+function loadInterviewHistory(){try{const x=JSON.parse(localStorage.getItem(INTERVIEW_HISTORY_KEY)||'[]');return Array.isArray(x)?x:[]}catch{return []}}
+function persistInterviewHistory(){localStorage.setItem(INTERVIEW_HISTORY_KEY,JSON.stringify(interviewHistory))}
 function todayStart(){const d=new Date();d.setHours(0,0,0,0);return d.getTime()}
 function tomorrowStart(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+1);return d.getTime()}
 function fmt(ts){return new Date(ts).toLocaleDateString('ja-JP')}
@@ -91,21 +99,25 @@ function renderReview(){
   document.getElementById('micBtn').onclick=startSpeech;
 }
 
-function startSpeech(){
+function startSpeechFor(targetId,statusId,buttonId){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  const status=document.getElementById('micStatus');
-  const btn=document.getElementById('micBtn');
-  if(!SR){status.textContent='この環境ではWeb音声認識が使えません。iPhoneキーボードの🎤音声入力なら使えます。';document.getElementById('attempt').focus();return}
+  const status=document.getElementById(statusId);
+  const btn=document.getElementById(buttonId);
+  const target=document.getElementById(targetId);
+  if(!status||!btn||!target)return;
+  if(!SR){status.textContent='この環境ではWeb音声認識が使えません。iPhoneキーボードの🎤音声入力なら使えます。';target.focus();return}
   try{
     const rec=new SR(); rec.lang='en-US'; rec.interimResults=true; rec.continuous=false; rec.maxAlternatives=1;
     let finalText='';
     rec.onstart=()=>{status.textContent='聞いてます… 英語でどうぞ';btn.textContent='🔴 聞き取り中'};
-    rec.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalText+=t;else interim+=t}document.getElementById('attempt').value=(finalText||interim).trim()};
+    rec.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalText+=t;else interim+=t}target.value=(finalText||interim).trim()};
     rec.onerror=e=>{status.textContent=e.error==='not-allowed'?'マイクの許可が必要です':'音声認識できませんでした。もう一度どうぞ。'};
-    rec.onend=()=>{btn.textContent='🎤 音声で回答';if(document.getElementById('attempt').value.trim())status.textContent='入力しました ✓';else if(!status.textContent)status.textContent='聞き取れませんでした'};
+    rec.onend=()=>{btn.textContent='🎤 音声で回答';if(target.value.trim())status.textContent='入力しました ✓';else if(!status.textContent)status.textContent='聞き取れませんでした'};
     rec.start();
   }catch{status.textContent='音声認識を開始できませんでした。キーボードの🎤も使えます。'}
 }
+
+function startSpeech(){startSpeechFor('attempt','micStatus','micBtn')}
 
 function grade(ok,attempt){
   const c=cards.find(x=>x.id===currentId);if(!c)return;
@@ -157,6 +169,74 @@ function saveBulk(){
   renderReview();renderList();renderStats();
 }
 
+
+function audioPath(item,kind){
+  const id=item.id;
+  const map={
+    '01_self_introduction':'01_self_introduction',
+    '02_reason_for_change':'02_reason_for_change',
+    '03_bangkok_experience':'03_bangkok_experience',
+    '04_meeting_facilitation':'04_meeting_facilitation',
+    '05_problem_solving':'05_problem_solving'
+  };
+  return `./audio/${map[id]||id}_${kind}.mp3`;
+}
+function categoryLabel(c){return c==='meeting'?'会議英語':'面接'}
+function itemHistory(id){return interviewHistory.filter(x=>x.itemId===id)}
+function latestInterviewRecord(id){const h=itemHistory(id);return h.length?h[h.length-1]:null}
+function ratingLabel(r){return r===0?'まだ無理':r===1?'だいたいOK':r===2?'できた':'未評価'}
+async function loadInterviewData(){
+  try{
+    const resp=await fetch(INTERVIEW_DATA_URL,{cache:'no-cache'});if(!resp.ok)throw new Error('HTTP '+resp.status);
+    const data=await resp.json();if(!Array.isArray(data))throw new Error('invalid data');
+    interviewItems=data;renderInterviewHome();
+  }catch(e){document.getElementById('interviewBody').innerHTML=`<div class="card"><b>教材を読み込めませんでした。</b><div class="muted" style="margin-top:8px">通信状態を確認して再読み込みしてください。</div><div class="tiny" style="margin-top:8px">${esc(e.message)}</div></div>`}
+}
+function renderInterviewHome(){
+  activeInterviewId=null;stopInterviewAudio();
+  const root=document.getElementById('interviewBody');
+  const completed=new Set(interviewHistory.filter(x=>x.rating===2).map(x=>x.itemId)).size;
+  root.innerHTML=`<div class="card"><div class="section-title">面接・ビジネス英語</div><div class="muted">質問に答える → 模範回答 → 音声・シャドーイング → 自己評価</div><div class="interview-meta"><span class="progress-pill">教材 ${interviewItems.length}本</span><span class="progress-pill">学習 ${interviewHistory.length}回</span><span class="progress-pill">「できた」 ${completed}/${interviewItems.length}</span></div></div><div class="interview-list">${interviewItems.map((item,i)=>{const latest=latestInterviewRecord(item.id);return `<button class="interview-item" onclick="openInterview('${item.id}')"><div class="row"><span class="badge">${categoryLabel(item.category)}</span>${latest?`<span class="badge ${latest.rating===2?'done':''}">${ratingLabel(latest.rating)}</span>`:''}</div><div class="interview-title" style="margin-top:8px">${i+1}. ${esc(item.title)}</div><div class="muted" style="margin-top:6px">${esc(item.question)}</div>${latest?`<div class="tiny" style="margin-top:8px">最終学習 ${fmt(latest.date)} / シャドーイング ${latest.shadowingCount||0}回</div>`:''}</button>`}).join('')}</div><div class="card"><div class="section-title">学習履歴</div>${renderInterviewHistoryList()}</div>`;
+}
+function renderInterviewHistoryList(){
+  if(!interviewHistory.length)return '<div class="empty">まだ学習履歴はありません。</div>';
+  return interviewHistory.slice().reverse().slice(0,20).map(h=>{const item=interviewItems.find(x=>x.id===h.itemId);return `<div class="item"><div class="row"><b>${esc(item?.title||h.itemId)}</b><span class="badge ${h.rating===2?'done':''}">${ratingLabel(h.rating)}</span></div><div class="tiny">${new Date(h.date).toLocaleString('ja-JP')} / シャドーイング ${h.shadowingCount||0}回</div>${h.attempt?`<div class="muted" style="margin-top:5px">回答: ${esc(h.attempt)}</div>`:''}</div>`}).join('');
+}
+window.openInterview=id=>{
+  const item=interviewItems.find(x=>x.id===id);if(!item)return;activeInterviewId=id;stopInterviewAudio();
+  const latest=latestInterviewRecord(id);const root=document.getElementById('interviewBody');
+  root.innerHTML=`<button class="btn secondary back-btn" id="interviewBack">← 教材一覧</button><div class="card"><div class="row"><span class="badge">${categoryLabel(item.category)}</span><span class="tiny">${esc(item.title)}</span></div><div class="question interview-question">${esc(item.question)}</div><div class="row" style="margin-top:12px"><button class="btn secondary" id="speakQuestion">🔊 質問を聞く</button><button class="btn secondary" id="qaAudio">🎧 実戦練習（Q&A）</button></div><label style="margin-top:18px">自分で英語回答</label><textarea id="interviewAttempt" placeholder="ここに回答。🎤でも入力できます">${esc(latest?.attempt||'')}</textarea><div class="row" style="margin-top:10px"><button class="btn mic" id="interviewMic">🎤 音声で回答</button><span id="interviewMicStatus" class="tiny"></span></div><div class="row" style="margin-top:12px"><button class="btn primary" id="interviewReveal">模範回答を見る</button></div><div id="interviewRevealArea" class="hidden"><div class="answerbox"><b>模範回答</b>\n<span class="script">${esc(item.script_en)}</span>\n\n<b>日本語</b>\n<span class="script">${esc(item.script_ja)}</span></div><div class="audio-row row" style="margin-top:12px"><button class="btn secondary" id="normalAudio">▶ 通常速度</button><button class="btn secondary" id="slowAudio">🐢 ゆっくり</button></div><div class="card" style="box-shadow:none;margin-top:14px"><b>シャドーイング</b><div class="muted">1回終わるごとに＋1</div><div class="row" style="margin-top:10px"><button class="btn secondary" id="shadowMinus">−</button><span class="stat" id="shadowCount">${latest?.shadowingCount||0}</span><button class="btn primary" id="shadowPlus">＋1回</button></div></div><div class="card" style="box-shadow:none"><b>チャンク確認</b><ul class="chunk-list">${(item.chunks||[]).map(c=>`<li>${esc(c)}</li>`).join('')}</ul></div><div><b>自己評価</b><div class="rating-row row" style="margin-top:10px"><button class="btn danger" data-rating="0">まだ無理</button><button class="btn secondary" data-rating="1">だいたいOK</button><button class="btn ok" data-rating="2">できた</button></div><div id="interviewSaveMsg" class="muted" style="margin-top:10px"></div></div></div></div>`;
+  document.getElementById('interviewBack').onclick=renderInterviewHome;
+  document.getElementById('speakQuestion').onclick=()=>speakQuestion(item.question);
+  document.getElementById('qaAudio').onclick=()=>playInterviewAudio(audioPath(item,'qa'),'qaAudio','🎧 実戦練習（Q&A）');
+  document.getElementById('interviewMic').onclick=()=>startSpeechFor('interviewAttempt','interviewMicStatus','interviewMic');
+  document.getElementById('interviewReveal').onclick=()=>{document.getElementById('interviewRevealArea').classList.remove('hidden');document.getElementById('interviewReveal').classList.add('hidden')};
+  document.getElementById('normalAudio').onclick=()=>playInterviewAudio(audioPath(item,'normal'),'normalAudio','▶ 通常速度');
+  document.getElementById('slowAudio').onclick=()=>playInterviewAudio(audioPath(item,'slow'),'slowAudio','🐢 ゆっくり');
+  document.getElementById('shadowPlus').onclick=()=>{const el=document.getElementById('shadowCount');el.textContent=String(Number(el.textContent||0)+1)};
+  document.getElementById('shadowMinus').onclick=()=>{const el=document.getElementById('shadowCount');el.textContent=String(Math.max(0,Number(el.textContent||0)-1))};
+  document.querySelectorAll('[data-rating]').forEach(btn=>btn.onclick=()=>saveInterviewRecord(Number(btn.dataset.rating)));
+};
+function speakQuestion(text){
+  if(!('speechSynthesis' in window)){alert('この環境では質問読み上げを利用できません。');return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.95;speechSynthesis.speak(u);
+}
+function stopInterviewAudio(){if(interviewAudio){interviewAudio.pause();interviewAudio.currentTime=0;interviewAudio=null}}
+function playInterviewAudio(src,buttonId,label){
+  stopInterviewAudio();const btn=document.getElementById(buttonId);if(!btn)return;
+  interviewAudio=new Audio(src);btn.textContent='⏸ 再生中';
+  interviewAudio.onended=()=>{btn.textContent=label;interviewAudio=null};
+  interviewAudio.onerror=()=>{btn.textContent=label;alert('音声を再生できませんでした。通信状態を確認してください。');interviewAudio=null};
+  interviewAudio.play().catch(()=>{btn.textContent=label;alert('音声を再生できませんでした。もう一度タップしてください。');interviewAudio=null});
+}
+function saveInterviewRecord(rating){
+  if(!activeInterviewId)return;
+  const attempt=document.getElementById('interviewAttempt')?.value.trim()||'';
+  const shadowingCount=Number(document.getElementById('shadowCount')?.textContent||0);
+  interviewHistory.push({itemId:activeInterviewId,date:Date.now(),rating,shadowingCount,attempt});persistInterviewHistory();
+  const msg=document.getElementById('interviewSaveMsg');if(msg)msg.textContent=`保存しました ✓　${ratingLabel(rating)} / シャドーイング ${shadowingCount}回`;
+}
+
 function renderList(){
   const q=(document.getElementById('search')?.value||'').toLowerCase();
   const arr=cards.filter(c=>[c.jp,c.mine,c.model,c.note,c.chunks,c.tags].join(' ').toLowerCase().includes(q));
@@ -168,10 +248,10 @@ function renderStats(){const reviews=cards.flatMap(c=>c.history||[]);const ok=re
 function exportData(){const blob=new Blob([JSON.stringify(cards,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`english-review-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importData(file){const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!Array.isArray(x))throw 0;if(confirm(`${x.length}件を読み込みます。現在のデータは置き換わります。`)){cards=x;persist();renderReview();renderList();renderStats()}}catch{alert('読み込みできないファイルです')}};r.readAsText(file)}
 
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.panel').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.tab).classList.remove('hidden');if(b.dataset.tab==='review')renderReview();if(b.dataset.tab==='list')renderList();if(b.dataset.tab==='stats')renderStats()});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.panel').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.tab).classList.remove('hidden');if(b.dataset.tab==='review')renderReview();if(b.dataset.tab==='list')renderList();if(b.dataset.tab==='stats')renderStats();if(b.dataset.tab==='interview'){if(interviewItems.length)renderInterviewHome();else loadInterviewData()}});
 document.getElementById('saveBtn').onclick=addCard;document.getElementById('parseBtn').onclick=previewBulk;document.getElementById('bulkSaveBtn').onclick=saveBulk;document.getElementById('search').oninput=renderList;document.getElementById('exportBtn').onclick=exportData;document.getElementById('importFile').onchange=e=>e.target.files[0]&&importData(e.target.files[0]);
 
-renderReview();renderList();renderStats();
+renderReview();renderList();renderStats();loadInterviewData();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { navigator.serviceWorker.register('./sw.js').catch(()=>{}); }
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent);
 const standalone=window.navigator.standalone===true || window.matchMedia('(display-mode: standalone)').matches;
