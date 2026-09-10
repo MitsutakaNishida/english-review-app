@@ -19,14 +19,19 @@
     "title": "Reason for Career Change",
     "category": "interview",
     "question": "Why are you looking for a new opportunity?",
-    "script_en": "I have gained a lot of valuable experience in the public sector, especially in tourism and international projects.\n\nAt the same time, I have become more interested in working in an environment where decisions can be made more quickly and where I can be closer to actual business operations.\n\nI would also like to use my overseas experience more directly.\n\nThat is why I am now looking for a position where I can take more responsibility and contribute to business growth.",
-    "script_ja": "公共部門では、特に観光や国際プロジェクトを中心に多くの貴重な経験を積んできました。\n\n一方で、より迅速に意思決定でき、実際の事業運営により近い環境で働きたいという気持ちが強くなりました。\n\nまた、海外での経験をより直接的に活かしたいと考えています。\n\nそのため、より大きな責任を担い、事業の成長に貢献できるポジションを探しています。",
+    "script_en": "I’ve had a wide range of experiences in the public sector, and I’ve learned a lot from them.\n\nBut over time, I realized that I feel most motivated when I’m closer to the actual business and the people running it.\n\nIn government, my role has often been to coordinate different stakeholders and support projects from the public-sector side. But sometimes, I wanted to stay closer to the project and see more directly how the decisions actually affected the business.\n\nMy experience in Bangkok also made me realize that I enjoy working close to the field, where you have to make practical decisions and deal with problems as they happen.\n\nAt this stage of my career, I’d like to take more ownership, be involved in day-to-day operations, and be more directly responsible for results.\n\nThat’s why I’m looking for a new opportunity.",
+    "script_ja": "公共部門では幅広い経験を積み、そこから多くのことを学んできました。\n\nただ、時間が経つにつれて、実際の事業や、それを動かしている人たちにより近いところで働くときに、自分は最もやりがいを感じるのだと気づきました。\n\n行政では、異なる関係者を調整し、公共部門の立場からプロジェクトを支援する役割を担うことが多くありました。ただ時には、そのプロジェクトにもっと近いところに関わり続け、意思決定が実際の事業にどのような影響を与えたのかを、より直接的に見たいと思うこともありました。\n\nバンコクでの経験を通じても、現場に近いところで、実務的な判断をし、起きた問題にその場で対応していく仕事を自分が楽しんでいると気づきました。\n\nキャリアのこの段階では、より主体的に責任を持ち、日々の事業運営に関わり、成果に対してより直接的な責任を負いたいと考えています。\n\nそのため、新しい機会を探しています。",
     "chunks": [
-      "I have gained a lot of valuable experience in …",
-      "I have become more interested in …",
-      "I would also like to …",
-      "That is why I am now looking for …",
-      "contribute to business growth"
+      "I’ve had a wide range of experiences in the public sector",
+      "I feel most motivated when I’m closer to the actual business",
+      "coordinate different stakeholders and support projects",
+      "see more directly how the decisions actually affected the business",
+      "My experience in Bangkok also made me realize that …",
+      "make practical decisions and deal with problems as they happen",
+      "take more ownership",
+      "be involved in day-to-day operations",
+      "be more directly responsible for results",
+      "That’s why I’m looking for a new opportunity."
     ]
   },
   {
